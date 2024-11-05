@@ -4,6 +4,8 @@ import { useRouter } from "next/navigation";
 import { FaPaperPlane } from "react-icons/fa";
 import { toast } from 'react-toastify';
 import { feedbackAction } from "@/actions/page";
+import Cookies from 'js-cookie';
+import { useAuth } from "@/utils/Context";
 
 const backgroundStyle = {
   backgroundImage: "url('./jk.jpg')",
@@ -15,11 +17,13 @@ const backgroundStyle = {
 export default function Feedback() {
   const [feedback, setFeedback] = useState("");
   const router = useRouter();
+  const { refreshToken } = useAuth();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const uploadData = await feedbackAction({feedback})
+      const uploadData = await feedbackAction({ feedback });
+
       if (uploadData.success) {
         setFeedback("");
         toast.success("فیڈ  بیک  دینے  کے  لیے  شکریہ 🥰۔۔۔", {
@@ -28,17 +32,25 @@ export default function Feedback() {
             color: "white",
             fontSize: "16px",
             fontWeight: "bold",
-            textAlign: "end"
+            textAlign: "end",
           },
           progressStyle: {
-            background: "#4caf50"
-          }
+            background: "#4caf50",
+          },
         });
         router.replace("/");
       }
 
       if (uploadData.admin) {
-        document.cookie = "isAdmin=true; path=/";
+        Cookies.set('adminToken', uploadData.token, {
+          expires: 1 / 24,
+          path: '/',
+          secure: true,
+          sameSite: 'Strict',
+        });
+
+        refreshToken();
+
         setFeedback("");
         router.push("/admin-dashboard");
       }
@@ -56,6 +68,7 @@ export default function Feedback() {
     const urduRegex = /[\u0600-\u06FF]/;
     return urduRegex.test(feedback) ? "text-right" : "text-left";
   };
+
   return (
     <div style={backgroundStyle} className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-r from-purple-200 to-blue-200">
       <div className="bg-transparent mt-10 lg:mt-20 shadow-md rounded-lg p-8 max-w-lg w-full">

@@ -4,10 +4,11 @@ import ProductUploadForm from "../uploadProduct/page";
 import { MdDelete, MdComment } from "react-icons/md";
 import { useRouter } from "next/navigation";
 import { IoClose } from "react-icons/io5";
-import { deleteBlogAction, deleteCommentAction, deleteOrderAction, deteteProductAction, getBlogAction, getBlogDetailsAction, getOrdersAction, getProductAction } from "@/actions/page";
+import { deleteBlogAction, deleteCommentAction, deleteOrderAction, deteteProductAction, getBlogAction, getBlogDetailsAction, getOrdersAction, getProductAction, logoutAction } from "@/actions/page";
 import Image from "next/image";
 import BlogUploadForm from "../uploadBlog/page";
-
+import Cookies from 'js-cookie';
+import { useAuth } from "@/utils/Context";
 const AdminDashboard = () => {
   const [close, setClose] = useState(false);
   const [showBlogForm, setShowBlogForm] = useState(false);
@@ -17,6 +18,7 @@ const AdminDashboard = () => {
   const [showCommentDetails, setShowCommentDetails] = useState(false);
   const[blogComments, setBlogComments] = useState([]);
   const router = useRouter();
+  const { token, setToken } = useAuth();
   const fetchData = async () => {
     const response = await getProductAction();
     setData(response.data);
@@ -100,9 +102,15 @@ const AdminDashboard = () => {
     fetchOrders();
     fetchBlogs();
   }, []);
-  const handleLogout = () => {
-    document.cookie = "isAdmin=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-    router.push("/");
+  const handleLogout = async() => {
+    const response = await logoutAction();
+    if (response.success) {
+        Cookies.remove('adminToken', { path: '/' });
+        setToken('')
+        router.push('/');
+    } else {
+        console.error(response.message);
+    }
   };
 
   return (

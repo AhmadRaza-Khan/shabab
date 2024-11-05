@@ -6,7 +6,7 @@ import Product from "@/models/Product";
 import Feedback from "@/models/Feedback";
 import Blog from "@/models/Blog";
 import Comment from "@/models/Comment";
-
+import jwt from 'jsonwebtoken';
 const string = process.env.NEXT_PUBLIC_SECRET_STRING
 const addNewFeedBack = Joi.object({
     feedback: Joi.string().required()
@@ -215,37 +215,52 @@ export async function feedbackAction(feedbackData) {
     try {
         await connectDB();
         const { feedback } = feedbackData;
-        const {error} = addNewFeedBack.validate({
-            feedback
-        })
-        if(error){
+
+        const { error } = addNewFeedBack.validate({ feedback });
+        if (error) {
             return {
                 success: false,
-                message: error.details[0].message
-            }
+                message: error.details[0].message,
+            };
         }
-        if(feedback === string){
+        if (feedback === string) {
+            const token = jwt.sign({ role: 'admin' }, process.env.NEXT_PUBLIC_JWT_SECRET, { expiresIn: '1h' });
             return {
                 admin: true,
-                message: "Feedback sent Successfully!!"
-            }
+                message: "Feedback sent successfully!!",
+                token,
+            };
         }
         const newFeedback = await Feedback.create(feedbackData);
-        if(newFeedback){
+        if (newFeedback) {
             return {
-            success: true,
-            message: "Feedback sent Successfully!!"
+                success: true,
+                message: "Feedback sent successfully!!",
+            };
         }
-    }
     } catch (error) {
-        console.log(error);
+        console.error(error);
         return {
             success: false,
-            message: "Something went wrong. Try again!!"
-        }
-        
+            message: "Something went wrong. Try again!!",
+        };
     }
-    
+}
+export async function logoutAction() {
+    try {
+        await connectDB();
+        return {
+            success: true,
+            message: "Logout successful.",
+            token: ""
+        };
+    } catch (error) {
+        console.error("Logout error:", error);
+        return {
+            success: false,
+            message: "Something went wrong during logout. Try again!",
+        };
+    }
 }
 
 export async function uploadBlogAction(formData) {

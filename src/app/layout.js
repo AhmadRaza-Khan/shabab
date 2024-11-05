@@ -5,8 +5,9 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer } from 'react-toastify';
+import { AuthProvider } from "@/utils/Context";
 
-// Import local fonts
+
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
   variable: "--font-geist-sans",
@@ -18,7 +19,6 @@ const geistMono = localFont({
   weight: "100 900",
 });
 
-// Import Urdu font
 const urduFont = Noto_Nastaliq_Urdu({
   weight: ["400", "700"],
   subsets: ["arabic"],
@@ -35,10 +35,12 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable} ${urduFont.variable} antialiased`}>
+      <AuthProvider>
         <ToastContainer />
         <Header />
         {children}
         <Footer />
+    </AuthProvider>
       </body>
     </html>
   );

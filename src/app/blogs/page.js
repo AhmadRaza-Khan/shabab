@@ -34,7 +34,6 @@ const BlogPage = () => {
       setLoading(false)
     }
   };
-
   const selectBlog = async (title) => {
     try {
       setLoading(true)
