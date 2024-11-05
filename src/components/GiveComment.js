@@ -10,7 +10,6 @@ const GiveComment = ({data, setData, initialData}) => {
         e.preventDefault();
         try {
           const uploadData = await addCommentAction(data);
-          console.log(uploadData)
           if (uploadData.success) {
             setData(initialData);
             toast.success("اپنی رائے کے اظہار کے لیے شکریہ 🥰۔۔۔", {

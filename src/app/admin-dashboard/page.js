@@ -9,12 +9,14 @@ import Image from "next/image";
 import BlogUploadForm from "../uploadBlog/page";
 import Cookies from 'js-cookie';
 import { useAuth } from "@/utils/Context";
+import DeleteConfirmationForm from "@/components/DeleteConfirmationForm";
 const AdminDashboard = () => {
   const [close, setClose] = useState(false);
   const [showBlogForm, setShowBlogForm] = useState(false);
   const [data, setData] = useState([]);
   const [order, setOrder] = useState([]);
   const [blogs, setBlogs] = useState([]);
+  const[showDeletionForm, setShowDeletionForm] = useState(false);
   const [showCommentDetails, setShowCommentDetails] = useState(false);
   const[blogComments, setBlogComments] = useState([]);
   const router = useRouter();
@@ -32,24 +34,17 @@ const AdminDashboard = () => {
     setOrder(responseData.data);
   };
 
-  const deleteProduct = async (getId) => {
-    const password = window.prompt("Please enter your password to confirm product deletion:");
-    if (password === "daaroo") {
-      const confirmed = window.confirm("Are you sure you want to delete this product?");
-      if (confirmed) {
+ const deleteProduct = async (getId) => {
         try {
           const responseData = await deteteProductAction(getId);
           if (responseData.success) {
+            setShowDeletionForm(false)
             router.refresh();
           }
         } catch (error) {
           console.log(error);
         }
       }
-    } else {
-      alert("Incorrect password.");
-    }
-  };
 
   const deleteOrder = async (orderId) => {
     await deleteOrderAction(orderId);
@@ -57,10 +52,6 @@ const AdminDashboard = () => {
     router.refresh();
   };
   const deleteBlog = async (blogId) => {
-    const password = window.prompt("Please enter your password to confirm blog deletion:");
-    if (password === "blogo") {
-      const confirmed = window.confirm("Are you sure you want to delete this blog?");
-      if (confirmed) {
         try {
           await deleteBlogAction(blogId);
           setOrder(blogs.filter((blog) => blog._id !== blogId));
@@ -68,10 +59,6 @@ const AdminDashboard = () => {
           console.error("Error deleting blog:", error);
         }
       }
-    } else {
-      alert("Incorrect password.");
-    }
-  };
   const selectBlog = async (title) => {
     try {
       const response = await getBlogDetailsAction(title);
@@ -81,10 +68,6 @@ const AdminDashboard = () => {
     }
   };
   const deleteComment = async (id)=> {
-    const password = window.prompt("Please enter your password to confirm comment deletion:");
-    if (password === "commento") {
-      const confirmed = window.confirm("Are you sure you want to delete this comment?");
-      if (confirmed) {
         try {
           await deleteCommentAction(id);
           router.refresh();
@@ -92,11 +75,6 @@ const AdminDashboard = () => {
           console.error("Error deleting comment:", error);
         }
       }
-    } else {
-      alert("Incorrect password.");
-    }
-    
-  }
   useEffect(() => {
     fetchData();
     fetchOrders();
@@ -143,6 +121,17 @@ const AdminDashboard = () => {
                 <p className="text-white">Mobile: {order.mobile}</p>
                 <p className="text-white">Address: {order.address}</p>
                 <p className="text-white">Product: {order.product}</p>
+                <p className="text-white">
+                   {new Date(order?.createdAt).toLocaleString("en-US", {
+                     hour: "numeric",
+                     minute: "numeric",
+                     hour12: true,
+                   })}{" "}
+                   {new Date(order?.createdAt).getMonth() + 1}/
+                   {new Date(order?.createdAt).getDate()}/
+                   {new Date(order?.createdAt).getFullYear()}
+                 </p>
+
               </div>
               <MdDelete
                 className="text-red-600 cursor-pointer hover:text-red-800"
@@ -153,6 +142,7 @@ const AdminDashboard = () => {
           ))
         )}
       </div>
+     
     </div>
 
     {/* Products and Blogs Section */}
@@ -187,10 +177,14 @@ const AdminDashboard = () => {
                     className="rounded-full h-10 w-10 object-cover"
                   />
                   <MdDelete
-                    onClick={() => deleteProduct(product._id)}
+                    onClick={() => setShowDeletionForm(!showDeletionForm)}
                     className="text-red-600 cursor-pointer ml-5 hover:text-red-800"
                     size={24}
                   />
+                   {
+                     showDeletionForm && 
+                     <DeleteConfirmationForm state={setShowDeletionForm} onDelete={deleteProduct} requiredPassword={"daaroo"} id={product?._id} itemType={product.engTitle} />
+                   }
                 </div>
               ))}
             </div>
@@ -218,10 +212,14 @@ const AdminDashboard = () => {
             <p className="text-slate-600 my-10 text-2xl">Comments</p>
             {blogComments.length > 0? blogComments?.map((data, index) => (
               <div key={index + 1} className="flex items-center border left-8 lg:leading-10 tracking-wider rounded-md border-slate-600 w-full justify-between">
-                <MdDelete onClick={()=> deleteComment(data._id)} className="text-2xl text-red-500" />
+                <MdDelete onClick={()=> setShowDeletionForm(true)} className="text-2xl text-red-500" />
                 <p className="text-white urdu-text px-2 py-3">{data?.comment}</p>
               </div> 
             )) :  <p className="text-lg text-white">No comments posted for this blog yet!!</p> } 
+                  {
+                     showDeletionForm && 
+                     <DeleteConfirmationForm state={setShowDeletionForm} onDelete={deleteComment} requiredPassword={"commento"} id={data?._id} itemType={data.comment} />
+                   }
           </div>          
           :
           <div className="space-y-3">
@@ -235,10 +233,14 @@ const AdminDashboard = () => {
               <h3 className="flex-grow text-center font-semibold text-white">{blog.title}</h3>
               <MdComment onClick={()=> {selectBlog(blog.title), setShowCommentDetails(!showCommentDetails)}} className="text-green-600 cursor-pointer text-2xl hover:text-green-800" />
               <MdDelete
-                onClick={() => deleteBlog(blog._id)}
+                onClick={() => setShowDeletionForm(true)}
                 className="text-red-600 cursor-pointer ml-5 hover:text-red-800"
                 size={24}
               />
+              {
+               showDeletionForm && 
+              <DeleteConfirmationForm state={setShowDeletionForm} onDelete={deleteBlog} requiredPassword={"blogo"} id={blog?._id} itemType={blog.title} />
+               }
             </div>
           ))}
         </div>

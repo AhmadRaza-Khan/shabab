@@ -81,7 +81,7 @@ export default function BlogUploadForm({ showBlogForm, setShowBlogForm }) {
         image1: imageUrls.image1,
         image2: imageUrls.image2,
       });
-
+console.log(uploadData)
       if (uploadData.success) {
         toast.success("The blog uploaded successfully!😋", {
           style: {
