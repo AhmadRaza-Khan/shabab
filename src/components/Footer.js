@@ -39,7 +39,7 @@ const Footer = () => {
           <div className="w-full md:w-1/3 mb-6 md:mb-0">
             <h3 className="text-lg font-semibold mb-2">Follow Us</h3>
             <div className="flex space-x-4">
-              <Link href="https://facebook.com" target="_blank" rel="noopener noreferrer">
+              <Link href="https://web.facebook.com/people/Shabab/61568371412418/" target="_blank" rel="noopener noreferrer">
                 <FaFacebook className="text-2xl hover:text-gray-400" />
               </Link>
               <Link href="https://twitter.com" target="_blank" rel="noopener noreferrer">

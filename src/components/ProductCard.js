@@ -24,14 +24,14 @@ const ProductCard = ({ productList }) => {
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 my-10 w-full">
         {productList.map((dat, index) => (
           <div
-            onClick={() => productDetails(dat._id)}
+            onClick={() => productDetails(dat?._id)}
             className="mx-auto rounded-lg bg-gradient-to-r from-purple-200 to-blue-200 border-[#B2B4B2] border-2 cursor-pointer"
             key={index + 1}
           >
             <Image src={dat.image} width={200} height={200} alt="img" className="contain rounded-t-lg h-52 w-52" />
             <div className="flex justify-between mx-2 my-3">
-              <h3 className="text-center font-bold text-xs">{dat.engTitle}</h3>
-              <h3 className="text-center text-xs font-bold urdu-text">{dat.title}</h3>
+              <h3 className="text-center font-bold text-xs">{dat?.engTitle}</h3>
+              <h3 className="text-center text-xs font-bold urdu-text">{dat?.title}</h3>
             </div>
           </div>
         ))}

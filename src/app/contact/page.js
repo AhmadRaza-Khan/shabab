@@ -24,8 +24,8 @@ const ContactUs = () => {
               <FaWhatsapp className="text-3xl text-green-500" />
               <div>
                 <p className="text-lg font-semibold text-gray-900">WhatsApp</p>
-                <a href="https://wa.me/+923491707535" target="_blank" rel="noopener noreferrer" className="text-green-700 hover:underline">
-                +923491707535
+                <a href="https://wa.me/+923197927820" target="_blank" rel="noopener noreferrer" className="text-green-700 hover:underline">
+                03197927820
                 </a>
               </div>
             </div>
@@ -35,9 +35,14 @@ const ContactUs = () => {
               <FaPhone className="text-3xl text-blue-500" />
               <div>
                 <p className="text-lg font-semibold text-gray-900">Mobile Number</p>
-                <a href="tel:+923491707535" className="text-blue-700 hover:underline">
-                +923491707535
+               <div className='flex flex-col '>
+               <a href="tel:+923491707535" className="text-blue-700 hover:underline">
+                03197927820
                 </a>
+                <a href="tel:+923491707535" className="text-blue-700 hover:underline">
+                03232482946
+                </a>
+               </div>
               </div>
             </div>
 

@@ -18,7 +18,7 @@ const ProductDetailPage = async ({ params }) => {
     return <div>Product not found</div>;
   }
 
-  const filteredProductList = productList?.filter((data) => data._id !== details);
+  const filteredProductList = productList?.filter((data) => data?._id !== details);
 
   return (
     <div className="flex flex-col items-center shadow-md shadow-slate-600 py-10 bg-black">
@@ -29,36 +29,36 @@ const ProductDetailPage = async ({ params }) => {
           className="w-64 mx-auto rounded-lg h-64 object-cover object-center"
           height={256}
           width={256}
-          src={product.image}
-          alt={product.title}
+          src={product?.image}
+          alt={product?.title}
           priority
         />
 
         <div className="p-6">
           <div className='flex justify-between'>
           <h1 className="text-xl md:text-2xl lg:text-3xl font-bold text-end text-gray-300">
-            {product.engTitle}
+            {product?.engTitle}
           </h1>
           <h1 className="text-xl md:text-2xl lg:text-3xl urdu-text font-bold text-end text-gray-300">
-            {product.title}
+            {product?.title}
           </h1>
           </div>
 
           <p className="mt-5 text-end my-5 urdu-text leading-8 lg:leading-10 tracking-wider text-gray-300 text-sm md:text-base">
-            {product.description}
+            {product?.description}
           </p>
 
           <div className="flex flex-col justify-between mt-4">
             <div className="text-sm urdu-text text-end text-gray-300 mt-2 md:mt-0">
-              <b className='text-base'>طریقہ استعمال:</b> {product.dosage}
+              <b className='text-base'>طریقہ استعمال:</b> {product?.dosage}
             </div>
             <div className="text-sm urdu-text mt-2 text-end md:text-xl font-bold text-white">
-              {product.price} :قیمت
+              {product?.price} :قیمت
             </div>
           </div>
 
           <button className="w-full bg-gray-600 urdu-text hover:bg-gray-800 border-2 border-white text-white font-semibold py-2 px-4 mt-4 rounded-lg shadow-md transition duration-300">
-            <Link href={`/order?product=${product.engTitle}`}>آرڈر کریں</Link>
+            <Link href={`/order?product=${product?.engTitle}`}>آرڈر کریں</Link>
           </button>
         </div>
       </div>
@@ -74,15 +74,15 @@ const ProductDetailPage = async ({ params }) => {
               key={index + 1}
             >
               <Image
-                src={data.image}
-                alt={data.title}
+                src={data?.image}
+                alt={data?.title}
                 height={128}
                 width={128}
                 className="rounded-lg h-32 w-32 object-cover mb-2"
               />
               <div className="">
-        <h3 className="text-center text-gray-200 text-xs">{data.engTitle}</h3>
-        <h3 className="text-center urdu-text text-gray-200 text-xs">{data.title}</h3>
+        <h3 className="text-center text-gray-200 text-xs">{data?.engTitle}</h3>
+        <h3 className="text-center urdu-text text-gray-200 text-xs">{data?.title}</h3>
         </div>
             </Link>
           ))}

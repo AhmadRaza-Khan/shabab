@@ -54,6 +54,7 @@ const AdminDashboard = () => {
   const deleteBlog = async (blogId) => {
         try {
           await deleteBlogAction(blogId);
+          router.refresh()
           setOrder(blogs.filter((blog) => blog._id !== blogId));
         } catch (error) {
           console.error("Error deleting blog:", error);
@@ -107,20 +108,20 @@ const AdminDashboard = () => {
     <div className="flex flex-col bg-black shadow-md shadow-slate-400 p-6 rounded-lg w-full lg:w-1/2">
       <h2 className="text-xl font-semibold mb-6 text-white">Orders</h2>
       <div className="space-y-4">
-        {order.length === 0 ? (
+        {order?.length === 0 ? (
           <p className="text-white">No orders available.</p>
         ) : (
-          order.map((order, index) => (
+          order?.map((order, index) => (
             <div
               key={index + 1}
               className="flex justify-between items-center bg-black p-4 rounded-md border border-gray-300 shadow-md shadow-slate-400"
             >
               <div>
                 <p className="font-semibold text-white">Order {index + 1}:</p>
-                <p className="text-white">Customer: {order.customerName}</p>
-                <p className="text-white">Mobile: {order.mobile}</p>
-                <p className="text-white">Address: {order.address}</p>
-                <p className="text-white">Product: {order.product}</p>
+                <p className="text-white">Customer: {order?.customerName}</p>
+                <p className="text-white">Mobile: {order?.mobile}</p>
+                <p className="text-white">Address: {order?.address}</p>
+                <p className="text-white">Product: {order?.product}</p>
                 <p className="text-white">
                    {new Date(order?.createdAt).toLocaleString("en-US", {
                      hour: "numeric",
@@ -168,9 +169,9 @@ const AdminDashboard = () => {
                   className="flex justify-between items-center bg-black p-4 rounded-md border border-gray-300 shadow-md shadow-slate-400"
                 >
                   <p className="font-medium text-white">{index + 1}.</p>
-                  <h3 className="flex-grow text-center font-semibold text-white">{product.title}</h3>
+                  <h3 className="flex-grow text-center font-semibold text-white">{product?.title}</h3>
                   <Image
-                    src={product.image}
+                    src={product?.image}
                     alt="img"
                     height={40}
                     width={40}
@@ -210,7 +211,7 @@ const AdminDashboard = () => {
             <div className="flex flex-col relative shadow-md shadow-slate-600 py-5 pb-10 items-center justify-center space-y-3">
             <IoClose onClick={()=> setShowCommentDetails(!showCommentDetails)} className="text-white hover:text-red-600 text-xl absolute top-2 right-2 text-end"/>
             <p className="text-slate-600 my-10 text-2xl">Comments</p>
-            {blogComments.length > 0? blogComments?.map((data, index) => (
+            {blogComments?.length > 0? blogComments?.map((data, index) => (
               <div key={index + 1} className="flex items-center border left-8 lg:leading-10 tracking-wider rounded-md border-slate-600 w-full justify-between">
                 <MdDelete onClick={()=> setShowDeletionForm(true)} className="text-2xl text-red-500" />
                 <p className="text-white urdu-text px-2 py-3">{data?.comment}</p>
@@ -230,7 +231,7 @@ const AdminDashboard = () => {
               className="flex justify-between items-center bg-black p-4 rounded-md border border-gray-300 shadow-md shadow-slate-400"
             >
               <p className="font-medium text-white">{index + 1}.</p>
-              <h3 className="flex-grow text-center font-semibold text-white">{blog.title}</h3>
+              <h3 className="flex-grow text-center font-semibold text-white">{blog?.title}</h3>
               <MdComment onClick={()=> {selectBlog(blog.title), setShowCommentDetails(!showCommentDetails)}} className="text-green-600 cursor-pointer text-2xl hover:text-green-800" />
               <MdDelete
                 onClick={() => setShowDeletionForm(true)}
